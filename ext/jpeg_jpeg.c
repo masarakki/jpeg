@@ -39,11 +39,14 @@ static void jpeg_jpeg_mark(struct jpeg_jpeg *p) {
 }
 
 static void jpeg_jpeg_free(struct jpeg_jpeg *p) {
-    //    if (p->read) {
-    //    jpeg_destroy_compress(p->read);
-    //    free(p->read);
-    //}
-    //xfree(p);
+    if (p->read) {
+        jpeg_destroy_compress(p->read);
+        free(p->read);
+    }
+    if (p->error) {
+        free(p->error);
+    }
+    xfree(p);
 }
 
 static VALUE jpeg_jpeg_s_open(int argc, VALUE *argv, VALUE self) {
