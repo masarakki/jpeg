@@ -1,5 +1,5 @@
 = jpeg
- A libjpeg wrapper for ruby
+A libjpeg wrapper for ruby
 == Install
  gem install jpeg
 
