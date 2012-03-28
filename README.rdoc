@@ -4,7 +4,7 @@
  gem install jpeg
 
 or
- echo 'gem "jpeg"' > Gemfile
+ echo 'gem "jpeg"' >> Gemfile
  bundle install
 
 == Usage
