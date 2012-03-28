@@ -1,9 +1,18 @@
 = jpeg
+ A libjpeg wrapper for ruby
+== Install
+ gem install jpeg
 
-Description goes here.
+or
+ echo 'gem "jpeg"' > Gemfile
+ bundle install
+
+== Usage
+ jpeg = Jpeg.open('path/to/file')
+ jpeg.size # => [1920, 1080]
 
 == Contributing to jpeg
- 
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
 * Fork the project.
