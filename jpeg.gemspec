@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "jpeg"
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["masarakki"]
@@ -35,12 +35,13 @@ Gem::Specification.new do |s|
     "lib/jpeg.rb",
     "spec/jpeg_spec.rb",
     "spec/samples/sample.jpg",
+    "spec/samples/sample.png",
     "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/masarakki/jpeg"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.21"
+  s.rubygems_version = "1.8.10"
   s.summary = "libjpeg wrapper for ruby"
 
   if s.respond_to? :specification_version then
