@@ -6,10 +6,31 @@ end
 
 describe "Jpeg" do
   subject { @jpeg }
-  context "valid jpeg" do
-    before { @jpeg = Jpeg.open(sample_file_path("sample.jpg")) }
+  describe :open do
+    context "valid jpeg" do
+      before { @jpeg = Jpeg.open(sample_file_path("sample.jpg")) }
+      its(:size) { should == [112, 112] }
+      its(:width) { should == 112 }
+      its(:height) { should == 112 }
+    end
+    context "non-exists file" do
+      it {
+        lambda {
+          Jpeg.open(sample_file_path("nonexists.jpg"))
+        }.should raise_error
+      }
+    end
+
+    context "not a correct jpeg file" do
+      it {
+        lambda {
+          Jpeg.open(sample_file_path("sample.png"))
+        }.should raise_error
+      }
+    end
+  end
+  describe :from_string do
+    before { @jpeg = Jpeg.open_buffer(File.open(sample_file_path("sample.jpg")).read) }
     its(:size) { should == [112, 112] }
-    its(:width) { should == 112 }
-    its(:height) { should == 112 }
   end
 end

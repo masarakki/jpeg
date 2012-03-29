@@ -5,7 +5,6 @@
 VALUE Jpeg;
 
 static VALUE jpeg_jpeg_s_open(int argc, VALUE *argv, VALUE sef);
-static VALUE jpeg_jpeg_s_open_buffer(int argc, VALUE *argv, VALUE sef);
 static VALUE jpeg_jpeg_alloc(VALUE klass);
 static void jpeg_jpeg_mark(struct jpeg_jpeg *p);
 static void jpeg_jpeg_free(struct jpeg_jpeg *p);
@@ -17,7 +16,6 @@ void Init_jpeg_jpeg() {
     Jpeg = rb_define_class("Jpeg", rb_cObject);
     rb_define_alloc_func(Jpeg, jpeg_jpeg_alloc);
     rb_define_singleton_method(Jpeg, "open", jpeg_jpeg_s_open, -1);
-    rb_define_singleton_method(Jpeg, "open_buffer", jpeg_jpeg_s_open_buffer, -1);
     rb_define_method(Jpeg, "width", jpeg_jpeg_width, 0);
     rb_define_method(Jpeg, "height", jpeg_jpeg_height, 0);
     rb_define_method(Jpeg, "size", jpeg_jpeg_size, 0);
@@ -61,35 +59,13 @@ static VALUE jpeg_jpeg_s_open(int argc, VALUE *argv, VALUE self) {
     jpeg = rb_funcall(Jpeg, rb_intern("new"), 0);
     Data_Get_Struct(jpeg, struct jpeg_jpeg, p_jpeg);
 
-    fp = fopen(RSTRING_PTR(path), "rb");
+    if ((fp = fopen(RSTRING_PTR(path), "rb")) == NULL) {
+        rb_raise(rb_eRuntimeError, "Open file failed");
+    }
     jpeg_stdio_src(p_jpeg->read, fp);
     jpeg_read_header(p_jpeg->read, TRUE);
     jpeg_start_decompress(p_jpeg->read);
     fclose(fp);
-    return jpeg;
-}
-
-static VALUE jpeg_jpeg_s_open_buffer(int argc, VALUE *argv, VALUE self) {
-    VALUE buffer;
-    VALUE jpeg;
-    struct jpeg_jpeg *p_jpeg;
-    void *data = NULL;
-    int len = 0;
-    int errorp;
-    int buffer_is_temporary = 0;
-
-    rb_scan_args(argc, argv, "1", &buffer);
-
-    if (TYPE(buffer) == T_STRING) {
-        data = RSTRING_PTR(buffer);
-        len = RSTRING_LEN(buffer);
-    } else {
-        rb_raise(rb_eTypeError, "wrong argument type %s (expected String)", rb_class2name(CLASS_OF(buffer)));
-    }
-
-    jpeg = rb_funcall(Jpeg, rb_intern("new"), 0);
-    Data_Get_Struct(jpeg, struct jpeg_jpeg, p_jpeg);
-
     return jpeg;
 }
 
