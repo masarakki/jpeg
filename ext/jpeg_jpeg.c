@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <jpeglib.h>
 #include "jpeg_jpeg.h"
+#inlcude "jpeg_error.h"
 
 VALUE Jpeg;
 
@@ -11,6 +12,8 @@ static void jpeg_jpeg_free(struct jpeg_jpeg *p);
 static VALUE jpeg_jpeg_width(VALUE self);
 static VALUE jpeg_jpeg_height(VALUE self);
 static VALUE jpeg_jpeg_size(VALUE self);
+
+extern VALUE Error;
 
 void Init_jpeg_jpeg() {
     Jpeg = rb_define_class("Jpeg", rb_cObject);
@@ -23,7 +26,7 @@ void Init_jpeg_jpeg() {
 void jpeg_jpeg_exit(j_common_ptr jpeg) {
     char buffer[JMSG_LENGTH_MAX];
     jpeg->err->format_message(jpeg, buffer);
-    rb_raise(rb_eRuntimeError, buffer);
+    rb_raise(Error, buffer);
 }
 
 static VALUE jpeg_jpeg_alloc(VALUE klass) {
