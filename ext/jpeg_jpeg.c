@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <jpeglib.h>
 #include "jpeg_jpeg.h"
-#inlcude "jpeg_error.h"
+#include "jpeg_error.h"
 
 VALUE Jpeg;
 
