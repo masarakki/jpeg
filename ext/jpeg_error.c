@@ -3,8 +3,8 @@
 #include "ruby.h"
 
 extern VALUE Jpeg;
-VALUE Error;
+VALUE Jpeg_Error;
 
 void Init_jpeg_error() {
-    Error = rb_define_class_under(Jpeg, "Error", rb_eStandardError);
+    Jpeg_Error = rb_define_class_under(Jpeg, "Error", rb_eStandardError);
 }
