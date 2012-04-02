@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "jpeg"
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["masarakki"]
-  s.date = "2012-03-29"
+  s.date = "2012-04-02"
   s.description = "libjpeg wrapper for ruby"
   s.email = "masaki@hisme.net"
   s.extensions = ["ext/extconf.rb"]
