@@ -11,6 +11,9 @@ or
  jpeg = Jpeg.open('path/to/file')
  jpeg.size # => [1920, 1080]
 
+== What can do
+- get size
+
 == Contributing to jpeg
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
