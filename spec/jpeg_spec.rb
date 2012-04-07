@@ -12,6 +12,7 @@ describe "Jpeg" do
       its(:size) { should == [112, 112] }
       its(:width) { should == 112 }
       its(:height) { should == 112 }
+      its(:color_info) { should == :rgb }
     end
     context "non-exists file" do
       it {

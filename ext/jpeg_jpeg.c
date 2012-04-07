@@ -12,6 +12,7 @@ static void jpeg_jpeg_free(struct jpeg_jpeg *p);
 static VALUE jpeg_jpeg_width(VALUE self);
 static VALUE jpeg_jpeg_height(VALUE self);
 static VALUE jpeg_jpeg_size(VALUE self);
+static VALUE jpeg_jpeg_color_info(VALUE self);
 
 extern VALUE Jpeg_Error;
 
@@ -22,7 +23,9 @@ void Init_jpeg_jpeg() {
     rb_define_method(Jpeg, "width", jpeg_jpeg_width, 0);
     rb_define_method(Jpeg, "height", jpeg_jpeg_height, 0);
     rb_define_method(Jpeg, "size", jpeg_jpeg_size, 0);
+    rb_define_method(Jpeg, "color_info", jpeg_jpeg_color_info, 0);
 }
+
 void jpeg_jpeg_exit(j_common_ptr jpeg) {
     char buffer[JMSG_LENGTH_MAX];
     jpeg->err->format_message(jpeg, buffer);
@@ -101,4 +104,12 @@ static VALUE jpeg_jpeg_size(VALUE self) {
     rb_ary_push(array, rb_int_new(p_jpeg->read->output_height));
 
     return array;
+}
+
+static VALUE jpeg_jpeg_color_info(VALUE self) {
+    struct jpeg_jpeg *p_jpeg;
+
+    Data_Get_Struct(self, struct jpeg_jpeg, p_jpeg);
+
+    return ID2SYM(rb_intern( p_jpeg->read->out_color_components == 3 ? "rgb", "gray" ));
 }
