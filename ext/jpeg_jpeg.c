@@ -110,6 +110,5 @@ static VALUE jpeg_jpeg_color_info(VALUE self) {
     struct jpeg_jpeg *p_jpeg;
 
     Data_Get_Struct(self, struct jpeg_jpeg, p_jpeg);
-
-    return ID2SYM(rb_intern( p_jpeg->read->out_color_components == 3 ? "rgb", "gray" ));
+    return ID2SYM(rb_intern( p_jpeg->read->out_color_components == 3 ? "rgb" : "gray" ));
 }
