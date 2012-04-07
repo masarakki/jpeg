@@ -10,9 +10,15 @@ or
 == Usage
  jpeg = Jpeg.open('path/to/file')
  jpeg.size # => [1920, 1080]
+ jpeg.width # => 1920
+ jpeg.height # => 1080
+ jpeg.color_info # => :rgb or :gray
+ jpeg.rgb? # => true
+ jpeg.gray? # => false
 
 == What can do
 - get size
+- get color_info
 
 == Contributing to jpeg
 
@@ -26,6 +32,6 @@ or
 
 == Copyright
 
-Copyright (c) 2012 Yamada Masaki. See LICENSE.txt for
+Copyright (c) 2012 masarakki. See LICENSE.txt for
 further details.
 
