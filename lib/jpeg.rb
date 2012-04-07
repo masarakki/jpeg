@@ -10,4 +10,12 @@ class Jpeg
     tmp.close
     jpeg
   end
+
+  def rgb?
+    color_info == :rgb
+  end
+
+  def gray?
+    color_info == :gray
+  end
 end
