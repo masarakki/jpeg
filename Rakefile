@@ -47,3 +47,11 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+if RUBY_PLATFORM =~ /java/
+  require 'rake/javaextensiontask'
+  Rake::JavaExtensionTask.new('jpeg')
+else
+  require 'rake/extensiontask'
+  Rake::ExtensionTask.new('jpeg')
+end
