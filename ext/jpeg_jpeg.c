@@ -51,10 +51,10 @@ static void jpeg_jpeg_mark(struct jpeg_jpeg *p) {
 static void jpeg_jpeg_free(struct jpeg_jpeg *p) {
     if (p->read) {
         jpeg_destroy_decompress(p->read);
-        free(p->read);
+        xfree(p->read);
     }
     if (p->error) {
-        free(p->error);
+        xfree(p->error);
     }
     xfree(p);
 }
