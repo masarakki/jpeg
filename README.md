@@ -1,4 +1,4 @@
-jpeg
+jpeg [![Build Status](https://secure.travis-ci.org/masarakki/jpeg.png)](http://travis-ci.org/masarakki/jpeg) [![Dependency Status](https://gemnasium.com/masarakki/jpeg.png)](http://gemnasium.com/masarakki/jpeg)
 ====
 A libjpeg wrapper for ruby
 Install
