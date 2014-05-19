@@ -2,9 +2,9 @@
 #include "jpeg_error.h"
 #include "ruby.h"
 
-extern VALUE Jpeg;
-VALUE Jpeg_Error;
+extern VALUE rb_mJpeg;
+VALUE rb_eJpegError;
 
 void Init_jpeg_error() {
-    Jpeg_Error = rb_define_class_under(Jpeg, "Error", rb_eStandardError);
+    rb_eJpegError = rb_define_class_under(rb_mJpeg, "Error", rb_eStandardError);
 }
