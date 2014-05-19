@@ -1,5 +1,6 @@
 require 'tempfile'
-require 'jpeg.so'
+require 'jpeg/jpeg'
+
 class Jpeg
   def self.open_buffer(str)
     tmp = Tempfile::new("ruby-jpeg")
