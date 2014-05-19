@@ -1,43 +1,43 @@
-jpeg [![Build Status](https://secure.travis-ci.org/masarakki/jpeg.png)](http://travis-ci.org/masarakki/jpeg) [![Dependency Status](https://gemnasium.com/masarakki/jpeg.png)](http://gemnasium.com/masarakki/jpeg)
-====
+[![Build Status](https://secure.travis-ci.org/masarakki/jpeg.png)](http://travis-ci.org/masarakki/jpeg)
+[![Dependency Status](https://gemnasium.com/masarakki/jpeg.png)](http://gemnasium.com/masarakki/jpeg)
+
+# Jpeg
+
 A libjpeg wrapper for ruby
-Install
--------
- gem install jpeg
 
-or
- echo 'gem "jpeg"' >> Gemfile
- bundle install
+## Installation
 
-Usage
------
-    jpeg = Jpeg.open('path/to/file')
-    jpeg.size # => [1920, 1080]
-    jpeg.width # => 1920
-    jpeg.height # => 1080
-    jpeg.color_info # => :rgb or :gray
-    jpeg.rgb? # => true
-    jpeg.gray? # => false
+Add this line to your application's Gemfile:
 
-What can do
------------
-* get size
-* get color_info
+    gem 'jpeg'
 
-Contributing to jpeg
---------------------
+And then execute:
 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
-* Fork the project.
-* Start a feature/bugfix branch.
-* Commit and push until you are happy with your contribution.
-* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+    $ bundle
 
-Copyright
----------
+Or install it yourself as:
 
-Copyright (c) 2012 masarakki. See LICENSE.txt for
-further details.
+    $ gem install jpeg
 
+## Usage
+
+- get size
+- get color_info
+
+```ruby
+jpeg = Jpeg.open('path/to/file')
+jpeg.size # => [1920, 1080]
+jpeg.width # => 1920
+jpeg.height # => 1080
+jpeg.color_info # => :rgb or :gray
+jpeg.rgb? # => true
+jpeg.gray? # => false
+```
+
+## Contributing
+
+1. Fork it ( https://github.com/[my-github-username]/jpeg/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
