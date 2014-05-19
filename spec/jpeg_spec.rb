@@ -9,31 +9,25 @@ describe "Jpeg" do
   describe :open do
     context "valid jpeg" do
       before { @jpeg = Jpeg.open(sample_file_path("sample.jpg")) }
-      its(:size) { should == [112, 112] }
-      its(:width) { should == 112 }
-      its(:height) { should == 112 }
-      its(:color_info) { should == :rgb }
-      its(:rgb?) { should be_true }
-      its(:gray?) { should be_false }
+      it { expect(subject).to be_a Jpeg::Image }
+      it { expect(subject.size).to eq [112, 112] }
+      it { expect(subject.width).to eq 112 }
+      it { expect(subject.height).to eq 112 }
+      it { expect(subject.color_info).to eq :rgb }
+      it { expect(subject).to be_rgb }
+      it { expect(subject).not_to be_gray }
     end
+
     context "non-exists file" do
-      it {
-        lambda {
-          Jpeg.open(sample_file_path("nonexists.jpg"))
-        }.should raise_error
-      }
+      it { expect { Jpeg.open(sample_file_path("nonexists.jpg")) }.to raise_error(Jpeg::Error) }
     end
 
     context "not a correct jpeg file" do
-      it {
-        lambda {
-          Jpeg.open(sample_file_path("sample.png"))
-        }.should raise_error
-      }
+      it { expect { Jpeg.open(sample_file_path("sample.png")) }.to raise_error(Jpeg::Error) }
     end
   end
   describe :from_string do
     before { @jpeg = Jpeg.open_buffer(File.open(sample_file_path("sample.jpg")).read) }
-    its(:size) { should == [112, 112] }
+    it { expect(subject.size).to eq [112, 112] }
   end
 end

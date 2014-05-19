@@ -1,8 +1,6 @@
-#ifndef __JPEG_IMAGE_
-#define __JPEG_IMAGE_
+#ifndef RB_JPEG_H
+#define RB_JPEG_H 1
 
 #include "ruby.h"
-
-void Init_jpeg();
 
 #endif
