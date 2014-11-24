@@ -2,5 +2,5 @@ require "mkmf"
 
 dir_config('jpeglib')
 if have_header('jpeglib.h') and have_library('jpeg')
-  create_makefile('jpeg')
+  create_makefile('jpeg/jpeg')
 end
