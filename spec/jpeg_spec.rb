@@ -16,6 +16,14 @@ describe "Jpeg" do
       it { expect(subject.color_info).to eq :rgb }
       it { expect(subject).to be_rgb }
       it { expect(subject).not_to be_gray }
+      it "should export the decoded data" do
+        decoded = subject.raw_data
+        expect(decoded.count).to eq 112
+        expect(decoded[0].count).to eq 112
+        expect(decoded[0][0]).to eq [255, 255, 253]
+        expect(decoded[60][50]).to eq [16, 27, 207]
+        expect(decoded[111][111]).to eq [255, 255, 255]
+      end
     end
 
     context "non-exists file" do
