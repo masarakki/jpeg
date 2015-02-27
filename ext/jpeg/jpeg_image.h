@@ -7,6 +7,7 @@
 struct rb_jpeg_image {
     struct jpeg_decompress_struct *read;
     struct jpeg_error_mgr *error;
+    FILE *fp;
 };
 
 void Init_jpeg_image();
