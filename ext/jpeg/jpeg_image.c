@@ -30,7 +30,7 @@ void Init_jpeg_image(void) {
 void jpeg_image_exit(j_common_ptr jpeg) {
     char buffer[JMSG_LENGTH_MAX];
     jpeg->err->format_message(jpeg, buffer);
-    rb_raise(rb_eJpegError, buffer);
+    rb_raise(rb_eJpegError, "%s\n", buffer);
 }
 
 static VALUE jpeg_image_alloc(VALUE klass) {
