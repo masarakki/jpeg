@@ -79,7 +79,6 @@ static VALUE jpeg_image_s_open(int argc, VALUE *argv, VALUE self) {
     jpeg_stdio_src(p_jpeg->read, fp);
 
     jpeg_read_header(p_jpeg->read, TRUE);
-    jpeg_start_decompress(p_jpeg->read);
     fclose(fp);
     return jpeg;
 }
@@ -87,13 +86,13 @@ static VALUE jpeg_image_s_open(int argc, VALUE *argv, VALUE self) {
 static VALUE jpeg_image_width(VALUE self) {
     struct rb_jpeg_image *p_jpeg;
     Data_Get_Struct(self, struct rb_jpeg_image, p_jpeg);
-    return rb_int_new(p_jpeg->read->output_width);
+    return rb_int_new(p_jpeg->read->image_width);
 }
 
 static VALUE jpeg_image_height(VALUE self) {
     struct rb_jpeg_image *p_jpeg;
     Data_Get_Struct(self, struct rb_jpeg_image, p_jpeg);
-    return rb_int_new(p_jpeg->read->output_height);
+    return rb_int_new(p_jpeg->read->image_height);
 }
 
 static VALUE jpeg_image_size(VALUE self) {
@@ -102,8 +101,8 @@ static VALUE jpeg_image_size(VALUE self) {
     Data_Get_Struct(self, struct rb_jpeg_image, p_jpeg);
 
     array = rb_ary_new();
-    rb_ary_push(array, rb_int_new(p_jpeg->read->output_width));
-    rb_ary_push(array, rb_int_new(p_jpeg->read->output_height));
+    rb_ary_push(array, rb_int_new(p_jpeg->read->image_width));
+    rb_ary_push(array, rb_int_new(p_jpeg->read->image_height));
 
     return array;
 }
@@ -112,5 +111,5 @@ static VALUE jpeg_image_color_info(VALUE self) {
     struct rb_jpeg_image *p_jpeg;
 
     Data_Get_Struct(self, struct rb_jpeg_image, p_jpeg);
-    return ID2SYM(rb_intern( p_jpeg->read->out_color_components == 3 ? "rgb" : "gray" ));
+    return ID2SYM(rb_intern( p_jpeg->read->out_color_space == JCS_GRAYSCALE ? "gray" : "rgb" ));
 }
