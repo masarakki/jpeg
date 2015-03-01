@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.expand_path('../lib', __FILE__)
+require 'jpeg'
+
+puts Process.pid
+file = File.expand_path('../spec/samples/sample.jpg', __FILE__)
+
+[10, 100, 1000].each do |n|
+  n.times do
+    @jpeg = Jpeg.open(file).raw_data
+  end
+  @jpeg = nil
+  GC.start
+  puts "#{n} times"
+  puts `pmap -x #{Process.pid} | tail -n 1`
+end

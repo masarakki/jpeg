@@ -10,6 +10,7 @@ describe "Jpeg" do
     context "valid jpeg" do
       before { @jpeg = Jpeg.open(sample_file_path("sample.jpg")) }
       it { expect(subject).to be_a Jpeg::Image }
+      it { expect(subject.filename).to eq sample_file_path('sample.jpg') }
       it { expect(subject.size).to eq [112, 112] }
       it { expect(subject.width).to eq 112 }
       it { expect(subject.height).to eq 112 }

@@ -5,9 +5,9 @@
 #include "ruby.h"
 
 struct rb_jpeg_image {
+    char *filename;
     struct jpeg_decompress_struct *read;
     struct jpeg_error_mgr *error;
-    FILE *fp;
 };
 
 void Init_jpeg_image();
