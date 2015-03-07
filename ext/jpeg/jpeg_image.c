@@ -7,13 +7,11 @@ extern VALUE rb_mJpeg;
 VALUE rb_cJpegImage;
 
 static VALUE jpeg_image_s_open(int argc, VALUE *argv, VALUE sef);
+static VALUE jpeg_image_s_open_buffer(int argc, VALUE *argv, VALUE sef);
 static VALUE jpeg_image_alloc(VALUE klass);
 static void jpeg_image_mark(struct rb_jpeg_image *p);
 static void jpeg_image_free(struct rb_jpeg_image *p);
-static VALUE jpeg_image_width(VALUE self);
-static VALUE jpeg_image_height(VALUE self);
 static VALUE jpeg_image_size(VALUE self);
-static VALUE jpeg_image_color_info(VALUE self);
 static VALUE jpeg_image_raw_data(VALUE self);
 
 extern VALUE rb_eJpegError;
@@ -22,10 +20,12 @@ void Init_jpeg_image(void) {
     rb_cJpegImage = rb_define_class_under(rb_mJpeg, "Image", rb_cObject);
     rb_define_alloc_func(rb_cJpegImage, jpeg_image_alloc);
     rb_define_singleton_method(rb_cJpegImage, "open", jpeg_image_s_open, -1);
-    rb_define_method(rb_cJpegImage, "width", jpeg_image_width, 0);
-    rb_define_method(rb_cJpegImage, "height", jpeg_image_height, 0);
+    rb_define_singleton_method(rb_cJpegImage, "open_buffer", jpeg_image_s_open_buffer, -1);
+    rb_attr(rb_cJpegImage, rb_intern("width"), 1, 0, 0);
+    rb_attr(rb_cJpegImage, rb_intern("height"), 1, 0, 0);
+    rb_attr(rb_cJpegImage, rb_intern("color_info"), 1, 0, 0);
+
     rb_define_method(rb_cJpegImage, "size", jpeg_image_size, 0);
-    rb_define_method(rb_cJpegImage, "color_info", jpeg_image_color_info, 0);
     rb_define_method(rb_cJpegImage, "raw_data", jpeg_image_raw_data, 0);
 }
 
@@ -43,7 +43,6 @@ static VALUE jpeg_image_alloc(VALUE klass) {
     jpeg->error = (void *)ALLOC(struct jpeg_error_mgr);
     jpeg->read->err = jpeg_std_error(jpeg->error);
     jpeg->error->error_exit = jpeg_image_exit;
-    jpeg_create_decompress(jpeg->read);
 
     return Data_Wrap_Struct(klass, jpeg_image_mark, jpeg_image_free, jpeg);
 }
@@ -54,7 +53,6 @@ static void jpeg_image_mark(struct rb_jpeg_image *p) {
 
 static void jpeg_image_free(struct rb_jpeg_image *p) {
     if (p->read) {
-        jpeg_destroy_decompress(p->read);
         xfree(p->read);
     }
     if (p->error) {
@@ -66,56 +64,91 @@ static void jpeg_image_free(struct rb_jpeg_image *p) {
     xfree(p);
 }
 
-static VALUE jpeg_image_s_open(int argc, VALUE *argv, VALUE self) {
-    VALUE path;
+static void jpeg_image_s_set_read_source(struct rb_jpeg_image *p_jpeg) {
+
+    if (p_jpeg->filename) {
+
+        if ((p_jpeg->fp = fopen(p_jpeg->filename, "rb")) == NULL) {
+            rb_raise(rb_eJpegError, "Open file failed: %s", p_jpeg->filename);
+        }
+
+    } else {
+
+#ifdef jpeg_mem_src
+        jpeg_mem_src(p_jpeg->read, (unsigned char *) p_jpeg->buffer, p_jpeg->buffer_len);
+#else
+        if ((p_jpeg->fp = fmemopen(p_jpeg->buffer, p_jpeg->buffer_len, "rb")) == NULL) {
+            rb_raise(rb_eJpegError, "Could not read jpeg from buffer");
+        }
+#endif
+
+    }
+
+    if (p_jpeg->fp) {
+        jpeg_stdio_src(p_jpeg->read, p_jpeg->fp);
+    }
+}
+
+static VALUE jpeg_image_s_get_image_values(char *filename, char *buffer, int64_t buffer_len, VALUE self) {
     VALUE jpeg;
     struct rb_jpeg_image *p_jpeg;
-    char *filename;
-    rb_scan_args(argc, argv, "1", &path);
-    Check_Type(path, T_STRING);
 
-    jpeg = rb_funcall(rb_cJpegImage, rb_intern("new"), 0);
+    jpeg = rb_obj_alloc(rb_cJpegImage);
+    rb_obj_call_init(jpeg, 0, NULL);
+
     Data_Get_Struct(jpeg, struct rb_jpeg_image, p_jpeg);
-    filename = StringValuePtr(path);
 
-    if ((p_jpeg->fp = fopen(filename, "rb")) == NULL) {
-        rb_raise(rb_eJpegError, "Open file failed: %s", filename);
-    }
-    jpeg_stdio_src(p_jpeg->read, p_jpeg->fp);
+    p_jpeg->filename = filename;
+    p_jpeg->buffer = buffer;
+    p_jpeg->buffer_len = buffer_len;
+
+    jpeg_create_decompress(p_jpeg->read);
+
+    jpeg_image_s_set_read_source(p_jpeg);
 
     jpeg_read_header(p_jpeg->read, TRUE);
+
+    rb_iv_set(jpeg, "@width", LONG2NUM(p_jpeg->read->image_width));
+    rb_iv_set(jpeg, "@height", LONG2NUM(p_jpeg->read->image_height));
+    rb_iv_set(jpeg, "@color_info", ID2SYM(rb_intern( p_jpeg->read->out_color_space == JCS_GRAYSCALE ? "gray" : "rgb" )));
+
+    jpeg_destroy_decompress(p_jpeg->read);
+
+    if (p_jpeg->fp) {
+        fclose(p_jpeg->fp);
+        p_jpeg->fp = NULL;
+    }
+
     return jpeg;
 }
 
-static VALUE jpeg_image_width(VALUE self) {
-    struct rb_jpeg_image *p_jpeg;
-    Data_Get_Struct(self, struct rb_jpeg_image, p_jpeg);
-    return rb_int_new(p_jpeg->read->image_width);
+static VALUE jpeg_image_s_open(int argc, VALUE *argv, VALUE self) {
+    VALUE path;
+
+    rb_scan_args(argc, argv, "1", &path);
+    Check_Type(path, T_STRING);
+
+    return jpeg_image_s_get_image_values(StringValuePtr(path), NULL, 0, self);
 }
 
-static VALUE jpeg_image_height(VALUE self) {
-    struct rb_jpeg_image *p_jpeg;
-    Data_Get_Struct(self, struct rb_jpeg_image, p_jpeg);
-    return rb_int_new(p_jpeg->read->image_height);
+static VALUE jpeg_image_s_open_buffer(int argc, VALUE *argv, VALUE self) {
+    VALUE str;
+
+    rb_scan_args(argc, argv, "1", &str);
+    Check_Type(str, T_STRING);
+
+    return jpeg_image_s_get_image_values(NULL, StringValuePtr(str), RSTRING_LEN(str), self);
 }
 
 static VALUE jpeg_image_size(VALUE self) {
-    struct rb_jpeg_image *p_jpeg;
     VALUE array;
-    Data_Get_Struct(self, struct rb_jpeg_image, p_jpeg);
 
     array = rb_ary_new();
-    rb_ary_push(array, rb_int_new(p_jpeg->read->image_width));
-    rb_ary_push(array, rb_int_new(p_jpeg->read->image_height));
+
+    rb_ary_push(array, rb_iv_get(self, "@width"));
+    rb_ary_push(array, rb_iv_get(self, "@height"));
 
     return array;
-}
-
-static VALUE jpeg_image_color_info(VALUE self) {
-    struct rb_jpeg_image *p_jpeg;
-
-    Data_Get_Struct(self, struct rb_jpeg_image, p_jpeg);
-    return ID2SYM(rb_intern( p_jpeg->read->out_color_space == JCS_GRAYSCALE ? "gray" : "rgb" ));
 }
 
 static VALUE jpeg_image_raw_data(VALUE self) {
@@ -134,6 +167,12 @@ static VALUE jpeg_image_raw_data(VALUE self) {
     }
 
     Data_Get_Struct(self, struct rb_jpeg_image, p_jpeg);
+
+    jpeg_create_decompress(p_jpeg->read);
+
+    jpeg_image_s_set_read_source(p_jpeg);
+
+    jpeg_read_header(p_jpeg->read, TRUE);
 
     jpeg_start_decompress(p_jpeg->read);
 
@@ -164,6 +203,13 @@ static VALUE jpeg_image_raw_data(VALUE self) {
         rb_ary_push(matrix, line);
     }
     jpeg_finish_decompress(p_jpeg->read);
+
+    jpeg_destroy_decompress(p_jpeg->read);
+
+    if (p_jpeg->fp) {
+        fclose(p_jpeg->fp);
+        p_jpeg->fp = NULL;
+    }
 
     rb_iv_set(self, "@raw_data", matrix);
 

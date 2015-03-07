@@ -5,13 +5,7 @@ require 'jpeg/image'
 
 module Jpeg
   def self.open_buffer(str)
-    tmp = Tempfile::new("ruby-jpeg")
-    tmp.set_encoding Encoding::BINARY if tmp.respond_to?(:set_encoding)
-    tmp.puts str
-    tmp.rewind
-    jpeg = Jpeg::Image.open(tmp.path)
-    tmp.close
-    jpeg
+    Jpeg::Image.open_buffer(str)
   end
 
   def self.open(file)
