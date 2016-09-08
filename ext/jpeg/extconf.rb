@@ -1,6 +1,4 @@
-require "mkmf"
+require 'mkmf'
 
 dir_config('jpeglib')
-if have_header('jpeglib.h') and have_library('jpeg')
-  create_makefile('jpeg/jpeg')
-end
+create_makefile('jpeg/jpeg') if have_header('jpeglib.h') && have_library('jpeg')
