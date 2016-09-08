@@ -1,5 +1,3 @@
-require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
-
 def sample_file_path(file)
   File.join(File.dirname(__FILE__), 'samples', file)
 end
