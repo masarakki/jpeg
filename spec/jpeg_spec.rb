@@ -2,19 +2,21 @@ def sample_file_path(file)
   File.join(File.dirname(__FILE__), 'samples', file)
 end
 
-describe "Jpeg" do
-  subject { @jpeg }
-  describe :open do
-    context "valid jpeg" do
-      before { @jpeg = Jpeg.open(sample_file_path("sample.jpg")) }
-      it { expect(subject).to be_a Jpeg::Image }
-      it { expect(subject.size).to eq [112, 112] }
-      it { expect(subject.width).to eq 112 }
-      it { expect(subject.height).to eq 112 }
-      it { expect(subject.color_info).to eq :rgb }
-      it { expect(subject).to be_rgb }
-      it { expect(subject).not_to be_gray }
-      it "should export the decoded data" do
+describe 'Jpeg' do
+  describe '.open' do
+    subject(:image) { Jpeg.open(sample_file_path(filename)) }
+    context 'valid jpeg' do
+      let(:filename) { 'sample.jpg' }
+
+      it { is_expected.to be_a Jpeg::Image }
+      its(:size) { is_expected.to eq [112, 112] }
+      its(:width) { is_expected.to eq 112 }
+      its(:height) { is_expected.to eq 112 }
+      its(:color_info) { is_expected.to eq :rgb }
+      it { is_expected.to be_rgb }
+      it { is_expected.not_to be_gray }
+
+      it 'should export the decoded data' do
         decoded = subject.raw_data
         expect(decoded.count).to eq 112
         expect(decoded[0].count).to eq 112
@@ -24,16 +26,19 @@ describe "Jpeg" do
       end
     end
 
-    context "non-exists file" do
-      it { expect { Jpeg.open(sample_file_path("nonexists.jpg")) }.to raise_error(Jpeg::Error) }
+    context 'non-exists file' do
+      let(:filename) { 'nonexists.jpg' }
+      it { expect { subject }.to raise_error(Jpeg::Error) }
     end
 
-    context "not a correct jpeg file" do
-      it { expect { Jpeg.open(sample_file_path("sample.png")) }.to raise_error(Jpeg::Error) }
+    context 'not a correct jpeg file' do
+      let(:filename) { 'sample.png' }
+      it { expect { subject }.to raise_error(Jpeg::Error) }
     end
   end
   describe :from_string do
-    before { @jpeg = Jpeg.open_buffer(File.open(sample_file_path("sample.jpg")).read) }
-    it { expect(subject.size).to eq [112, 112] }
+    subject { Jpeg.open_buffer(File.read(sample_file_path(filename))) }
+    let(:filename) { 'sample.jpg' }
+    its(:size) { is_expected.to eq [112, 112] }
   end
 end
