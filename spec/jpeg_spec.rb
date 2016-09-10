@@ -1,7 +1,3 @@
-def sample_file_path(file)
-  File.join(File.dirname(__FILE__), 'samples', file)
-end
-
 describe 'Jpeg' do
   describe '.open' do
     subject(:image) { Jpeg.open(sample_file_path(filename)) }

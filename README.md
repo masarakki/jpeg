@@ -32,6 +32,11 @@ jpeg.height # => 1080
 jpeg.color_info # => :rgb or :gray
 jpeg.rgb? # => true
 jpeg.gray? # => false
+
+
+dot = jpeg.at(1920, 500)   #=> <Jpeg::Color r=0x00 g=0xaa b=0xff>
+dot.rgb    #=> [0, 170, 255]
+dot.to_s   #=> '#00aaff'
 ```
 
 ## Contributing
