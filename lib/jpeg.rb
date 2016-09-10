@@ -2,6 +2,7 @@ require 'tempfile'
 require 'jpeg/version'
 require 'jpeg/jpeg'
 require 'jpeg/image'
+require 'jpeg/color'
 
 module Jpeg
   def self.open_buffer(str)
