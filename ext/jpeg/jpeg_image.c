@@ -74,7 +74,7 @@ static void jpeg_image_s_set_read_source(struct rb_jpeg_image *p_jpeg) {
 
     } else {
 
-#ifdef jpeg_mem_src
+#if JPEG_LIB_VERSION >= 80
         jpeg_mem_src(p_jpeg->read, (unsigned char *) p_jpeg->buffer, p_jpeg->buffer_len);
 #else
         if ((p_jpeg->fp = fmemopen(p_jpeg->buffer, p_jpeg->buffer_len, "rb")) == NULL) {
