@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'jpeg'
   spec.version       = Jpeg::VERSION
   spec.authors       = ['masarakki']
-  spec.email         = ['masaki@hisme.net']
+  spec.email         = ['masaki182@gmail.com']
   spec.extensions    = ['ext/jpeg/extconf.rb']
   spec.summary       = 'libjpeg wrapper for ruby'
   spec.description   = 'libjpeg wrapper for ruby'
