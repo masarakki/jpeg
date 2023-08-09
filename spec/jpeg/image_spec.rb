@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Jpeg::Image do
   subject(:image) { Jpeg.open(sample_file_path('zoi.jpg')) }
   its(:width) { is_expected.to eq 630 }

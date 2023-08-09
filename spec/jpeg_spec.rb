@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Jpeg' do
   describe '.open' do
     subject(:image) { Jpeg.open(sample_file_path(filename)) }

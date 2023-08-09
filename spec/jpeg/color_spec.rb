@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Jpeg::Color do
   let(:g) { 0x00 }
   let(:rgb) { [0xcc, g, 0xff] }

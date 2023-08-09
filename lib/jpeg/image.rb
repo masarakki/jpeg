@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 module Jpeg
   class Image
-    def at(x, y)
-      raise 'invalid position' unless inside? x, y
-      dot = raw_data[y][x]
+    def at(pos_x, pos_y)
+      raise 'invalid position' unless inside? pos_x, pos_y
+
+      dot = raw_data[pos_y][pos_x]
       color? ? Color.new(*dot) : Color.new(dot, dot, dot)
     end
 
@@ -17,8 +20,8 @@ module Jpeg
 
     private
 
-    def inside?(x, y)
-      x < width && x >= 0 && y < height && y >= 0
+    def inside?(pos_x, pos_y)
+      pos_x < width && pos_x >= 0 && pos_y < height && pos_y >= 0
     end
   end
 end
