@@ -14,7 +14,7 @@ module Jpeg
     end
 
     def inspect
-      format '<Jpeg::Color r=0x<red>%02x g=0x%<green>02x b=0x%<blue>02x>', to_h
+      format '<Jpeg::Color r=0x%<red>02x g=0x%<green>02x b=0x%<blue>02x>', to_h
     end
   end
 end

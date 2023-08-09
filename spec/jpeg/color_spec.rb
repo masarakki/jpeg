@@ -6,4 +6,5 @@ describe Jpeg::Color do
   its(:g) { is_expected.to eq g }
   its(:rgb) { is_expected.to eq rgb }
   its(:to_s) { is_expected.to eq '#cc00ff' }
+  its(:inspect) { is_expected.to eq '<Jpeg::Color r=0xcc g=0x00 b=0xff>' }
 end
