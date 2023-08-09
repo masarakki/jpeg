@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jpeg
   Color = Struct.new(:r, :g, :b) do
     def rgb
@@ -6,7 +8,7 @@ module Jpeg
     alias_method :to_a, :rgb
 
     def to_h
-      { red: r, green: g, blue: b}
+      { red: r, green: g, blue: b }
     end
 
     def to_s
