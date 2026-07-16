@@ -8,7 +8,7 @@ jobs:
         ruby: ["3.2", "3.3", "3.4", "4.0"]
     steps:
       - run: sudo apt-get update -qq && sudo apt-get install -y libjpeg-dev
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
@@ -18,7 +18,7 @@ jobs:
   rubocop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
